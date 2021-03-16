@@ -25,8 +25,7 @@ server {
 
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
-    #server_name explorer.bulwarkcrypto.com;
-    server_name _;
+    server_name explorer.mydeficha.in;
 
     gzip on;
     gzip_static on;
@@ -58,14 +57,14 @@ server {
 }
 
 #server {
-#    if ($host = explorer.bulwarkcrypto.com) {
+#    if ($host = explorer.mydeficha.in) {
 #        return 301 https://\$host\$request_uri;
 #    } # managed by Certbot
 #
 #	listen 80 default_server;
 #	listen [::]:80 default_server;
 #
-#	server_name explorer.bulwarkcrypto.com;
+#	server_name explorer.mydeficha.in;
 #   return 404; # managed by Certbot
 #}
 EOL
@@ -87,47 +86,9 @@ installMongo () {
     clear
 }
 
-installBulwark () {
-    echo "Installing Bulwark..."
-    mkdir -p /tmp/bulwark
-    cd /tmp/bulwark
-    curl -Lo bulwark.tar.gz $bwklink
-    tar -xzf bulwark.tar.gz
-    sudo mv * /usr/local/bin
-    cd
-    rm -rf /tmp/bulwark
-    mkdir -p /home/explorer/.bulwark
-    cat > sudo /home/explorer/.bulwark/bulwark.conf << EOL
-rpcport=52544
-rpcuser=$rpcuser
-rpcpassword=$rpcpassword
-daemon=1
-txindex=1
-EOL
-    sudo cat > sudo /etc/systemd/system/bulwarkd.service << EOL
-[Unit]
-Description=bulwarkd
-After=network.target
-[Service]
-Type=forking
-User=explorer
-WorkingDirectory=/home/explorer
-ExecStart=/usr/local/bin/bulwarkd -datadir=/home/explorer/.bulwark
-ExecStop=/usr/local/bin/bulwark-cli -datadir=/home/explorer/.bulwark stop
-Restart=on-abort
-[Install]
-WantedBy=multi-user.target
-EOL
-    sudo systemctl start bulwarkd
-    sudo systemctl enable bulwarkd
-    echo "Sleeping for 1 hour while node syncs blockchain..."
-    sleep 1h
-    clear
-}
-
 installBlockEx () {
     echo "Installing BlockEx..."
-    git clone https://github.com/bulwark-crypto/bulwark-explorer.git /home/explorer/blockex
+    git clone https://github.com/stonygan/defichain-explorer.git /home/explorer/blockex
     cd /home/explorer/blockex
     yarn install
     cat > /home/explorer/blockex/config.server.js << EOL
@@ -168,21 +129,21 @@ const { SocialType } = require('./features/social/data');
  */
 const config = {
   api: {
-    host: 'http://localhost', // ex: 'https://explorer.bulwarkcrypto.com' for nginx (SSL), 'http://IP_ADDRESS' 
+    host: 'http://localhost', // ex: 'https://explorer.mydeficha.in' for nginx (SSL), 'http://IP_ADDRESS' 
     port: '3000', // ex: Port 3000 on prod and localhost
     portWorker: '3000', // ex: Port 443 for production(ngingx) if you have SSL (we use certbot), 3000 on localhost or ip
     prefix: '/api',
     timeout: '5s'
   },
   coinDetails: {
-    name: 'Bulwark',
-    shortName: 'BWK',
+    name: 'Defichain',
+    shortName: 'DFI',
     displayDecimals: 2,
-    longName: 'Bulwark Cryptocurrency',
+    longName: 'Defichain',
     coinNumberFormat: '0,0.0000',
     coinTooltipNumberFormat: '0,0.0000000000', // Hovering over a number will show a larger percision tooltip
-    websiteUrl: 'https://bulwarkcrypto.com/',
-    masternodeCollateral: 5000 // MN ROI% gets based on this number. If your coin has multi-tiered masternodes then set this to lowest tier (ROI% will simply be higher for bigger tiers)
+    websiteUrl: 'https://www.defichain.io/',
+    masternodeCollateral: 20000 // MN ROI% gets based on this number. If your coin has multi-tiered masternodes then set this to lowest tier (ROI% will simply be higher for bigger tiers)
   },
   offChainSignOn: {
     enabled: true,
@@ -192,9 +153,9 @@ const config = {
   // Add any important block counting down in this array
   blockCountdowns: [
     {
-      block: 602880, // What block are we counting down to?
-      beforeTitle: 'Next Superblock', // What do we show before the block number is hit?
-      afterTitle: 'Superblock Active For' // What do we show after the block number is hit?
+      block: 1050000, // What block are we counting down to?
+      beforeTitle: 'Halving', // What do we show before the block number is hit?
+      afterTitle: 'Halving Active' // What do we show after the block number is hit?
     }
   ],
 
@@ -223,7 +184,7 @@ const config = {
   },
   coinMarketCap: {
     api: 'http://api.coinmarketcap.com/v1/ticker/',
-    ticker: 'bulwark'
+    ticker: 'dfi'
   },
 
   /**
@@ -308,14 +269,7 @@ const config = {
         title: 'Each block contains a small portion that is awarded to masternode operators that lock 5000 BWK. Masternodes contribute to the network by handling certain coin operations within the network.'
       }
     },
-    'POW': {
-      // Adds a new label metadata address
-      carverAddressLabelWidget: {
-        label: 'Proof Of Work Rewards ðŸ’Ž',
-        title: 'Bulwark started as a Proof Of Work & Masternode coin. Blocks would be mined by powerful computers and be rewarded for keeping up the network.'
-      }
-    },
-    'POS': {
+     'POS': {
       // Adds a new label metadata address
       carverAddressLabelWidget: {
         label: 'Proof Of Stake Rewards ðŸ’Ž',
