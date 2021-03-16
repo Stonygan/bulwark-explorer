@@ -1,4 +1,4 @@
-const { SocialType } = require('./features/social/data');
+aconst { SocialType } = require('./features/social/data');
 
 /**
  * Global configuration object.
@@ -12,21 +12,21 @@ const { SocialType } = require('./features/social/data');
  */
 const config = {
   api: {
-    host: 'http://localhost', // ex: 'https://explorer.bulwarkcrypto.com' for nginx (SSL), 'http://IP_ADDRESS' 
+    host: 'http://localhost', // ex: 'https://explorer.mydeficha.in' for nginx (SSL), 'http://IP_ADDRESS' 
     port: '3000', // ex: Port 3000 on prod and localhost
     portWorker: '3000', // ex: Port 443 for production(ngingx) if you have SSL (we use certbot), 3000 on localhost or ip
     prefix: '/api',
     timeout: '5s'
   },
   coinDetails: {
-    name: 'Bulwark',
-    shortName: 'BWK',
+    name: 'Defichain',
+    shortName: 'DFI',
     displayDecimals: 2,
     longName: 'Bulwark Cryptocurrency',
     coinNumberFormat: '0,0.0000',
     coinTooltipNumberFormat: '0,0.0000000000', // Hovering over a number will show a larger percision tooltip
-    websiteUrl: 'https://bulwarkcrypto.com/',
-    masternodeCollateral: 5000, // MN ROI% gets based on this number. If your coin has multi-tiered masternodes then set this to lowest tier (ROI% will simply be higher for bigger tiers)
+    websiteUrl: 'https://www.defichain.io/',
+    masternodeCollateral: 20000, // MN ROI% gets based on this number. If your coin has multi-tiered masternodes then set this to lowest tier (ROI% will simply be higher for bigger tiers)
   },
   offChainSignOn: {
     enabled: true,
@@ -36,9 +36,9 @@ const config = {
   // Add any important block counting down in this array
   blockCountdowns: [
     {
-      block: 602880, // What block are we counting down to?
-      beforeTitle: 'Next Superblock', // What do we show before the block number is hit?
-      afterTitle: 'Superblock Active For' // What do we show after the block number is hit?
+      block: 1050000, // What block are we counting down to?
+      beforeTitle: 'Next Blockrewardreduction', // What do we show before the block number is hit?
+      afterTitle: 'First Blockrewardreduction active' // What do we show after the block number is hit?
     }
   ],
 
@@ -55,7 +55,7 @@ const config = {
       type: SocialType.Reddit, // What type of social widget is it?
       group: 'community', // Multiple social widget feeds can be combined into a single cross-app group feed
       options: {
-        subreddit: 'MyAwesomeCoin', // BulwarkCoin as an example
+        subreddit: 'defiblockchain', 
         query: 'flair:"Community"' // Show only posts with Community flair (the little tag next to post) (You can empty this to show all posts or specify your own filter based on https://www.reddit.com/wiki/search)
       }
     }
@@ -66,7 +66,7 @@ const config = {
   },
   coinMarketCap: {
     api: 'http://api.coinmarketcap.com/v1/ticker/',
-    ticker: 'bulwark'
+    ticker: 'dfi'
   },
 
   /**
@@ -154,17 +154,10 @@ const config = {
       // Adds a new label metadata address
       carverAddressLabelWidget: {
         label: 'Masternode Rewards 💎',
-        title: 'Each block contains a small portion that is awarded to masternode operators that lock 5000 BWK. Masternodes contribute to the network by handling certain coin operations within the network.'
+        title: 'Each block contains a small portion that is awarded to masternode operators that lock 20000 DFI. Masternodes contribute to the network by handling certain coin operations within the network.'
       }
     },
-    'POW': {
-      // Adds a new label metadata address
-      carverAddressLabelWidget: {
-        label: 'Proof Of Work Rewards 💎',
-        title: 'Bulwark started as a Proof Of Work & Masternode coin. Blocks would be mined by powerful computers and be rewarded for keeping up the network.'
-      }
-    },
-    'POS': {
+      'POS': {
       // Adds a new label metadata address
       carverAddressLabelWidget: {
         label: 'Proof Of Stake Rewards 💎',
